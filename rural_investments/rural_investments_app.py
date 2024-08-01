@@ -67,6 +67,7 @@ def create_plot_data(df, group_by, state = None):
 def create_map(plot_data, metric, state = None):
     # create plotly express choropleth map at the state or county level
     if state is None:
+        # state level
         params = dict(
             locations = "State Code", 
             locationmode = "USA-states",
@@ -74,6 +75,7 @@ def create_map(plot_data, metric, state = None):
             title = f"{metric} by State"
         )
     else:
+        # county level
         params = dict(
             geojson = "https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json", 
             locations = "County FIPS",
@@ -94,10 +96,10 @@ def create_map(plot_data, metric, state = None):
         showsubunits = True, subunitcolor = "Black"
     )
     fig.update_traces(marker_line_color = "Black")
-    # remove colorbar title and control thickness
+    # remove colorbar title and set thickness
     fig.update_layout(coloraxis_colorbar = dict(title = "", thicknessmode = "pixels", thickness = 25))
     # zoom to state if state map
-    if state is not None:
+    if state is not None and state != "AK": # fitbounds = "locations" behaves strangely for Alaska
         fig.update_geos(fitbounds = "locations")
     return fig
 
@@ -106,10 +108,12 @@ def create_bar_chart(plot_data, metric, variable, state = None):
     plot_data = plot_data.sort(metric, descending = False)
     # add text to bars
     text_auto = ".2s" if "Prop" not in metric else ".2f"
+    # create title
     title = f"{metric} by {variable}"
     if state is not None:
         title += f" (State = {state})"
     fig = px.bar(plot_data, x = metric, y = variable, text_auto = text_auto, title = title)
+    # remove legend
     fig.update_layout(showlegend = False)
     # change color of bars to black
     fig.update_traces(marker_color = "Black", marker_line_color = "Black")
