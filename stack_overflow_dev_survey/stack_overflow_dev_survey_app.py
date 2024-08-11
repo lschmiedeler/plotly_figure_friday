@@ -246,7 +246,7 @@ for id in ["left", "right"]:
         exclusion_prop = None if exclusion_prop == "" else exclusion_prop
         if tech_category is not None and metric is not None:
             plot_data, y = create_plot_data(tech_category, metric, exclusion_prop = exclusion_prop)
-            return px.bar(plot_data, x = tech_category, y = y)
+            return px.bar(plot_data, x = tech_category, y = y, title = f"{tech_category} - {metric}")
         return px.bar()
 
     @app.callback(
@@ -264,7 +264,7 @@ for id in ["left", "right"]:
             groups = [group]
             plot_data = create_plot_data(tech_category, metric, groups = groups, exclusion_prop = exclusion_prop)
             text = ".2f" if "Prop" in metric else ".2s"
-            return px.imshow(plot_data.drop(groups), y = plot_data[group], x = plot_data.drop(groups).columns, text_auto = text), {"display": "block"}
+            return px.imshow(plot_data.drop(groups), y = plot_data[group], x = plot_data.drop(groups).columns, text_auto = text, title = f"{tech_category} - {metric} by {group}"), {"display": "block"}
         return {}, {"display": "none"}
 
 # run dash app
