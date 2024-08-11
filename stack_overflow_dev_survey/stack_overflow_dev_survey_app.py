@@ -40,6 +40,7 @@ groups_info = {
 
 def clean_data(groups_info):
     # read in the data from csv to a polars dataframe
+    # this file is not on github due to size constraints
     df = pl.read_csv("survey_results_public.csv")
     # shorten/summarize values in ed level, main branch, and purchase influence columns
     for k, v in groups_info.items():
